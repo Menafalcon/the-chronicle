@@ -1,4 +1,4 @@
-const BASE_URL = "https://spring-auth-template-production.up.railway.app/api";
+const BASE_URL = "https://spring-auth-template.onrender.com/api";
 
 function getToken(): string | null {
   return localStorage.getItem("token");

@@ -21,20 +21,17 @@ export default function Register() {
     e.preventDefault();
     setError("");
 
-    // 1. Username length check
     if (name.length < 8) {
       setError("Username must be at least 8 characters.");
       return;
     }
 
-    // 2. Password complexity check (@, #, !, _)
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#!_])[A-Za-z\d@#!_]{8,}$/;
     if (!passwordRegex.test(password)) {
       setError("Password requires 8+ chars, 1 uppercase, 1 number, and 1 special (@#!_).");
       return;
     }
 
-    // 3. Password match check
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
