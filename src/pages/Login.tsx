@@ -3,12 +3,13 @@ import { Link, useLocation } from "wouter";
 import { VintageCard } from "@/components/VintageCard";
 import { VintageInput } from "@/components/VintageInput";
 import { VintageButton } from "@/components/VintageButton";
-import { PenTool } from "lucide-react";
+import { PenTool, Eye, EyeOff } from "lucide-react"; // Added Eye icons
 import { api } from "@/lib/api";
 
 export default function Login() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // New State
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
@@ -50,13 +51,24 @@ export default function Login() {
             onChange={e => setUserName(e.target.value)}
             required
           />
-          <VintageInput
-            type="password"
-            placeholder="Secret Cipher (Password)"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
+          
+          {/* Updated Password Field with Reveal Toggle */}
+          <div className="relative">
+            <VintageInput
+              type={showPassword ? "text" : "password"}
+              placeholder="Secret Cipher (Password)"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
           {error && (
             <div className="text-primary font-body text-sm font-bold text-center bg-primary/10 p-3 rounded-sm border border-primary/20">
