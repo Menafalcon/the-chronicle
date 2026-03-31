@@ -3,15 +3,15 @@ import { Link, useLocation } from "wouter";
 import { VintageCard } from "@/components/VintageCard";
 import { VintageInput } from "@/components/VintageInput";
 import { VintageButton } from "@/components/VintageButton";
-import { Feather, Eye, EyeOff } from "lucide-react"; // Added Eye icons
+import { Feather, Eye, EyeOff } from "lucide-react"; // Added icons
 import { api } from "@/lib/api";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New State
-  const [showPassword, setShowPassword] = useState(false);    // New State
+  const [confirmPassword, setConfirmPassword] = useState(""); // Matching state
+  const [showPassword, setShowPassword] = useState(false);    // Toggle state
   const [tel, setTel] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,22 +21,22 @@ export default function Register() {
     e.preventDefault();
     setError("");
 
-    // 1. Username Validation (Min 8 characters)
+    // 1. Username length check
     if (name.length < 8) {
-      setError("The Chosen Username must be at least 8 characters long.");
+      setError("Username must be at least 8 characters.");
       return;
     }
 
-    // 2. Password Matching
-    if (password !== confirmPassword) {
-      setError("The Secret Ciphers do not match.");
-      return;
-    }
-
-    // 3. Password Complexity (8+ chars, 1 Capital, 1 Number, 1 Special @#!_)
+    // 2. Password complexity check (@, #, !, _)
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#!_])[A-Za-z\d@#!_]{8,}$/;
     if (!passwordRegex.test(password)) {
-      setError("Password must be 8+ characters with 1 uppercase, 1 number, and 1 special character (@, #, !, _).");
+      setError("Password requires 8+ chars, 1 uppercase, 1 number, and 1 special (@#!_).");
+      return;
+    }
+
+    // 3. Password match check
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
@@ -67,29 +67,13 @@ export default function Register() {
           <h2 className="font-serif text-3xl md:text-4xl font-bold uppercase tracking-widest border-b border-foreground pb-4 inline-block text-foreground">
             Begin Your Chapter
           </h2>
-          <p className="font-body text-muted-foreground mt-6 text-sm italic">
-            Inscribe your details below to subscribe to the daily dispatches.
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Updated Username Input */}
-          <VintageInput 
-            placeholder="Chosen Username (Min 8 chars)" 
-            value={name} 
-            onChange={e => setName(e.target.value)} 
-            required 
-          />
+          <VintageInput placeholder="Chosen Username" value={name} onChange={e => setName(e.target.value)} required />
+          <VintageInput type="email" placeholder="Electronic Mail" value={email} onChange={e => setEmail(e.target.value)} required />
           
-          <VintageInput 
-            type="email" 
-            placeholder="Electronic Mail" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            required 
-          />
-
-          {/* Primary Password with Toggle */}
+          {/* Main Password with Toggle */}
           <div className="relative">
             <VintageInput 
               type={showPassword ? "text" : "password"} 
@@ -101,7 +85,7 @@ export default function Register() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -116,12 +100,7 @@ export default function Register() {
             required 
           />
 
-          <VintageInput 
-            type="tel" 
-            placeholder="Contact Number (Optional)" 
-            value={tel} 
-            onChange={e => setTel(e.target.value)} 
-          />
+          <VintageInput type="tel" placeholder="Contact Number (Optional)" value={tel} onChange={e => setTel(e.target.value)} />
 
           {error && (
             <div className="text-primary font-body text-sm font-bold text-center bg-primary/10 p-3 rounded-sm border border-primary/20">
@@ -133,13 +112,6 @@ export default function Register() {
             <VintageButton type="submit" disabled={loading} className="w-full">
               {loading ? "Inscribing..." : "Create Account"}
             </VintageButton>
-          </div>
-
-          <div className="text-center mt-8 font-body text-foreground text-sm border-t border-dashed border-foreground/30 pt-6">
-            Returning reader?{" "}
-            <Link href="/login" className="text-primary font-bold hover:underline tracking-wide uppercase">
-              Login here
-            </Link>
           </div>
         </form>
       </VintageCard>
